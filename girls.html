@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>T-Samar Math | سباق الأميرات 🌸</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ألوان العالم البناتي */
+        :root {
+            --pink: #ff85a2;
+            --purple: #a78bfa;
+            --gold: #fde047;
+            --bg: #2d1b2d; /* خلفية بنفسجي داكن غامقة جداً لشياكة الألوان */
+        }
+
+        body { background: var(--bg); color: #fff; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; margin: 0; padding: 20px; }
+        
+        /* شريط المتصدرة الوردي */
+        .ticker-wrap { background: var(--pink); color: #fff; padding: 12px 0; font-weight: bold; overflow: hidden; white-space: nowrap; margin-bottom: 25px; border-radius: 50px; border: 2px solid var(--gold); }
+        .ticker { display: inline-block; animation: ticker 15s linear infinite; font-size: 1.3rem; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+        @keyframes ticker { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .header { border-bottom: 3px double var(--pink); padding: 15px; margin-bottom: 20px; }
+        
+        .input-area { background: rgba(255, 133, 162, 0.1); padding: 20px; border-radius: 25px; margin-bottom: 30px; border: 1px dashed var(--pink); }
+        input { padding: 12px; border-radius: 20px; border: 2px solid var(--pink); width: 220px; font-size: 1rem; text-align: center; background: #fff; color: #333; }
+        .btn-add { background: var(--pink); color: white; border: none; padding: 12px 25px; border-radius: 20px; cursor: pointer; font-weight: bold; margin-right: 10px; box-shadow: 0 4px 10px rgba(255, 133, 162, 0.4); }
+
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        
+        /* كروت البنات */
+        .card { background: #432a43; border: 2px solid var(--purple); padding: 25px; border-radius: 30px; width: 220px; transition: 0.5s; position: relative; }
+        .card.top-girl { border: 3px solid var(--gold); box-shadow: 0 0 25px var(--pink); transform: scale(1.05); background: linear-gradient(145deg, #432a43, #5d3b5d); }
+
+        .emoji { font-size: 60px; display: block; margin-bottom: 15px; filter: drop-shadow(0 0 10px var(--pink)); }
+        .name { font-size: 1.5rem; font-weight: bold; margin-bottom: 15px; display: block; color: var(--pink); }
+        .btn-up { background: var(--gold); color: #432a43; border: none; width: 100%; padding: 12px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 1.1rem; }
+
+        /* الفوتر والسوشيال ميديا */
+        .footer { margin-top: 60px; padding: 30px; border-top: 1px solid rgba(255,133,162,0.3); }
+        .social-icons { display: flex; justify-content: center; gap: 40px; margin-top: 20px; }
+        .social-icons a { font-size: 3rem; text-decoration: none; transition: 0.3s; }
+        .fa-youtube { color: #FF0000; }
+        .fa-tiktok { color: #fff; }
+        .fa-instagram { color: #E1306C; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1 style="color:var(--pink); margin:0; font-size: 2.5rem;">👑 T-SAMAR MATH 👑</h1>
+        <p style="color:var(--purple); font-weight:bold;">عالم الأميرات المبدعات ✨</p>
+    </div>
+
+    <div class="ticker-wrap">
+        <div class="ticker" id="leaderBoardText">أهلاً بكنّ يا أميرات الرياضيات.. من ستتوج بالتاج اليوم؟ ✨🌸🎀</div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="girlInput" placeholder="اسم الأميرة الجديدة...">
+        <button class="btn-add" onclick="addGirl()">إضافة أميرة ✨</button>
+    </div>
+
+    <div id="cardsGrid" class="grid"></div>
+
+    <div class="footer">
+        <div class="social-icons">
+            <a href="https://youtube.com/@t_samar_math" target="_blank" class="fab fa-youtube"></a>
+            <a href="https://tiktok.com/@t_samora" target="_blank" class="fab fa-tiktok"></a>
+            <a href="https://www.instagram.com/t_samar_math" target="_blank" class="fab fa-instagram"></a>
+        </div>
+        <p style="color:var(--pink); margin-top:20px; font-weight:bold;">T-SAMAR MATH | GIRLS EDITION © 2026</p>
+    </div>
+
+    <script>
+        // نظام الصوت (AudioContext)
+        const aCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playTone(freq) {
+            const o = aCtx.createOscillator();
+            const g = aCtx.createGain();
+            o.connect(g); g.connect(aCtx.destination);
+            o.frequency.value = freq; g.gain.value = 0.05;
+            o.start();
+            g.gain.exponentialRampToValueAtTime(0.0001, aCtx.currentTime + 0.6);
+            o.stop(aCtx.currentTime + 0.6);
+        }
+
+        let girls = [];
+        // مراحل البنات (فراشة، زهرة، فيونكة، نجمة، قلادة، تاج)
+        const girlStages = ['🦋', '🌸', '🎀', '✨', '🎖️', '👑'];
+
+        function addGirl() {
+            const name = document.getElementById('girlInput').value.trim();
+            if(name) {
+                girls.push({ id: Date.now(), name: name, level: 0, time: Date.now() });
+                document.getElementById('girlInput').value = "";
+                playTone(523); // نغمة رقيقة
+                renderGirls();
+            }
+        }
+
+        function upgradeGirl(id) {
+            let i = girls.findIndex(g => g.id === id);
+            if(girls[i].level < 5) {
+                girls[i].level++;
+                girls[i].time = Date.now();
+                playTone(600 + (girls[i].level * 80));
+                renderGirls();
+            }
+        }
+
+        function renderGirls() {
+            girls.sort((a, b) => b.level - a.level || b.time - a.time);
+
+            const ticker = document.getElementById('leaderBoardText');
+            if(girls.length > 0 && girls[0].level > 0) {
+                ticker.innerText = `👑 ملكة الحصة الآن: الأميرة ${girls[0].name} وصلت لمرحلة (${girlStages[girls[0].level]}) مباااارك! 👑`;
+            }
+
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = "";
+            girls.forEach((g, idx) => {
+                const isTop = (idx === 0 && g.level > 0);
+                grid.innerHTML += `
+                    <div class="card ${isTop ? 'top-girl' : ''}">
+                        <span class="emoji">${girlStages[g.level]}</span>
+                        <span class="name">${g.name}</span>
+                        <button class="btn-up" onclick="upgradeGirl(${g.id})">تسجيل تميز ✨</button>
+                    </div>
+                `;
+            });
+        }
+    </script>
+</body>
+</html>
