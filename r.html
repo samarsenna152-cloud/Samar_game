@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Samar | Race of Champions 🏆</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --primary: #2b4162; --accent: #d4af37; --bg: #fdf5f6; }
+        body { background: var(--bg); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; color: var(--primary); text-align: center; }
+        
+        .top-bar { background: var(--primary); color: var(--accent); padding: 10px; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.1); overflow: hidden; }
+        .ticker { display: inline-block; white-space: nowrap; animation: scroll 15s linear infinite; font-weight: bold; }
+        @keyframes scroll { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        .header { margin: 20px 0; }
+        .header h1 { font-size: 2.2rem; margin: 0; color: var(--primary); border-bottom: 3px solid var(--accent); display: inline-block; }
+
+        .input-area { background: #fff; padding: 20px; border-radius: 20px; margin: 20px auto; max-width: 500px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        input { padding: 10px; border-radius: 20px; border: 2px solid #ddd; width: 60%; outline: none; }
+        .btn-add { background: var(--primary); color: #fff; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; }
+        
+        /* زرار الحفظ اليدوي للطمأنينة */
+        .btn-save { background: #28a745; color: white; border: none; padding: 5px 15px; border-radius: 10px; margin-top: 10px; cursor: pointer; font-size: 0.8rem; }
+
+        .race-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; padding: 20px; }
+        .racer-card { background: white; padding: 15px; border-radius: 15px; position: relative; border: 1px solid #eee; transition: 0.3s; }
+        .racer-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        
+        .car-emoji { font-size: 2.5rem; display: block; margin: 10px 0; }
+        .racer-name { font-weight: bold; font-size: 0.9rem; color: var(--primary); }
+        .btn-nitro { background: var(--accent); color: var(--primary); border: none; padding: 8px; border-radius: 10px; cursor: pointer; width: 100%; font-weight: bold; }
+
+        .del-btn { position: absolute; top: 5px; left: 5px; color: #ccc; cursor: pointer; border: none; background: none; font-size: 1.1rem; }
+        .del-btn:hover { color: #ff0000; }
+
+        .footer { margin-top: 50px; padding: 30px; background: rgba(255,255,255,0.5); }
+        .social-icons a { font-size: 2rem; margin: 0 15px; text-decoration: none; transition: 0.3s; }
+        .fa-youtube { color: #f00; } .fa-tiktok { color: #000; } .fa-instagram { color: #e1306c; }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div class="ticker" id="leader">🏁 سباق T-SAMAR للأبطال.. أهلاً بكم! 🏎️💨</div>
+</div>
+
+<div class="header">
+    <h1>T-SAMAR <span style="color:var(--accent)">MATH</span></h1>
+    <p>بـطريقتي الـخاصة.. السباق بدأ! 🏆</p>
+</div>
+
+<div class="input-area">
+    <input type="text" id="pName" placeholder="اسم البطل الجديد...">
+    <button class="btn-add" onclick="addP()">إضافة +</button>
+    <br>
+    <button class="btn-save" onclick="manualSave()">💾 حفظ التغييرات الآن</button>
+</div>
+
+<div id="raceTrack" class="race-grid"></div>
+
+<div class="footer">
+    <div class="social-icons">
+        <a href="https://www.youtube.com/@T_samar_math" target="_blank" class="fab fa-youtube"></a>
+        <a href="https://tiktok.com/@t_samora" target="_blank" class="fab fa-tiktok"></a>
+        <a href="https://www.instagram.com/t_samar_math?igsh=NDgzMWYzZ2pkNTg1" target="_blank" class="fab fa-instagram"></a>
+    </div>
+    <p style="font-weight: bold; margin-top:15px;">T-SAMAR SPECIAL EDITION ❤️</p>
+</div>
+
+<script>
+    const cars = ['🚗', '🚕', '🚙', '🏎️', '🚀', '⚡', '🏆'];
+    // جلب البيانات مع التأكد من وجودها
+    let list = [];
+    try {
+        const saved = localStorage.getItem('TS_RACE_DATA');
+        if (saved) list = JSON.parse(saved);
+    } catch(e) { console.log("خطأ في التحميل"); }
+
+    function addP() {
+        const n = document.getElementById('pName').value.trim();
+        if (n && list.length < 50) {
+            list.push({id: Date.now(), n: n, s: 0});
+            document.getElementById('pName').value = "";
+            save();
+        }
+    }
+
+    function move(id) {
+        let p = list.find(x => x.id === id);
+        if (p && p.s < 6) { p.s++; save(); }
+    }
+
+    function del(id) {
+        list = list.filter(x => x.id !== id);
+        save();
+    }
+
+    function manualSave() {
+        save();
+        alert("✅ تم حفظ أسماء الأبطال بنجاح!");
+    }
+
+    function save() {
+        localStorage.setItem('TS_RACE_DATA', JSON.stringify(list));
+        render();
+    }
+
+    function render() {
+        const track = document.getElementById('raceTrack');
+        track.innerHTML = "";
+        list.sort((a,b) => b.s - a.s);
+        
+        if (list.length > 0 && list[0].s > 0) {
+            document.getElementById('leader').innerHTML = `👑 المتصدر: <b>${list[0].n}</b> مباااارك يا بطل! 🏁🏆`;
+        }
+
+        list.forEach(p => {
+            track.innerHTML += `
+                <div class="racer-card">
+                    <button class="del-btn" onclick="del(${p.id})">×</button>
+                    <span class="racer-name">${p.n}</span>
+                    <span class="car-emoji">${cars[p.s]}</span>
+                    <button class="btn-nitro" onclick="move(${p.id})">نيترو 💨</button>
+                </div>`;
+        });
+    }
+
+    window.onload = render;
+</script>
+
+</body>
+</html>
