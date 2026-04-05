@@ -1,54 +1,66 @@
-<script>
-    // نظام الصوت الذكي
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    function playSound() {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-    }
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Samar Math</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: sans-serif; background: #2d1346; color: white; text-align: center; padding: 20px; margin: 0; }
+        .box { max-width: 500px; margin: auto; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 20px; border: 2px solid #ffd700; }
+        h1 { color: #ffd700; font-size: 22px; }
+        input { width: 70%; padding: 10px; border-radius: 10px; border: none; margin-bottom: 10px; }
+        .add-btn { background: #ffd700; color: #2d1346; border: none; padding: 10px 20px; border-radius: 10px; font-weight: bold; cursor: pointer; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; margin-top: 20px; }
+        .card { background: #ad1457; padding: 15px; border-radius: 12px; border: 1px solid #ffd700; }
+        .del { background: black; color: white; border: none; padding: 3px 8px; border-radius: 5px; font-size: 10px; cursor: pointer; margin-top: 5px; }
+        .social { margin-top: 30px; border-top: 1px solid #ffd700; padding-top: 15px; }
+        .social a { color: white; font-size: 25px; margin: 0 15px; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>👑 T-SAMAR MATH 👑</h1>
+        <input type="text" id="in" placeholder="اسم الأميرة...">
+        <button class="add-btn" onclick="add()">إضافة ✨</button>
+        <div id="grid" class="grid"></div>
+        <div class="social">
+            <a href="https://www.tiktok.com/@t_samora" target="_blank"><i class="fab fa-tiktok"></i></a>
+            <a href="https://www.instagram.com/t_samar_math" target="_blank"><i class="fab fa-instagram"></i></a>
+            <p style="font-size:12px; color:#ffd700;">Math Comes to Life 💎</p>
+        </div>
+    </div>
 
-    // وظيفة العرض من الذاكرة
-    function loadNames() {
-        const saved = JSON.parse(localStorage.getItem('SamarRoyal_Final_V4')) || [];
-        const grid = document.getElementById('grid');
-        grid.innerHTML = '';
-        saved.forEach((name, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            card.innerHTML = <i class="fas fa-crown"></i><span class="name">${name}</span><button class="del-btn" onclick="deleteName(${index})">حذف</button>;
-            grid.appendChild(card);
-        });
-    }
-
-    // وظيفة الإضافة والحفظ
-    function addName() {
-        const input = document.getElementById('nameInput');
-        const name = input.value.trim();
-        if (name) {
-            playSound();
-            const saved = JSON.parse(localStorage.getItem('SamarRoyal_Final_V4')) || [];
-            saved.push(name);
-            localStorage.setItem('SamarRoyal_Final_V4', JSON.stringify(saved));
-            input.value = '';
-            loadNames();
-        }
-    }
-
-    // وظيفة الحذف
-    function deleteName(index) {
-        const saved = JSON.parse(localStorage.getItem('SamarRoyal_Final_V4')) || [];
-        saved.splice(index, 1);
-        localStorage.setItem('SamarRoyal_Final_V4', JSON.stringify(saved));
-        loadNames();
-    }
-
-    window.onload = loadNames;
-</script>
+    <script>
+        function show() {
+            const d = JSON.parse(localStorage.getItem('S_G_Final')) || [];
+            const g = document.getElementById('grid');
+            g.innerHTML = '';
+            d.forEach((n, i) => {
+                const c = document.createElement('div');
+                c.className = 'card';
+                c.innerHTML = <div>👑</div><b>${n}</b><br><button class="del" onclick="del(${i})">حذف</button>;
+                g.appendChild(c);
+            });
+        }
+        function add() {
+            const i = document.getElementById('in');
+            const n = i.value.trim();
+            if(n) {
+                const d = JSON.parse(localStorage.getItem('S_G_Final')) || [];
+                d.push(n);
+                localStorage.setItem('S_G_Final', JSON.stringify(d));
+                i.value = '';
+                show();
+            }
+        }
+        function del(i) {
+            const d = JSON.parse(localStorage.getItem('S_G_Final')) || [];
+            d.splice(i, 1);
+            localStorage.setItem('S_G_Final', JSON.stringify(d));
+            show();
+        }
+        window.onload = show;
+    </script>
 </body>
 </html>
