@@ -1,61 +1,60 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Samar Math - Girls</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff0f5; color: #d81b60; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.1); border: 2px solid #f8bbd0; width: 90%; max-width: 400px; text-align: center; }
-        h1 { color: #ad1457; font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
-        input { width: 100%; padding: 12px; border: 2px solid #f48fb1; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; outline: none; font-size: 16px; }
-        button.add-btn { background: #d81b60; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button.add-btn:hover { background: #ad1457; transform: translateY(-2px); }
-        ul { list-style: none; padding: 0; margin-top: 20px; }
-        li { background: #fdf2f7; margin-bottom: 10px; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #d81b60; animation: fadeIn 0.5s ease; }
-        .delete-btn { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-        .footer { margin-top: 25px; font-size: 12px; color: #ad1457; font-weight: bold; opacity: 0.7; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>T-Samar Math - Girls</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff5f8; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 25px rgba(216, 27, 96, 0.1); border: 2px solid #f8bbd0; width: 90%; max-width: 380px; text-align: center; }
+        h1 { color: #ad1457; font-size: 20px; margin-bottom: 20px; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
+        input { width: 100%; padding: 12px; border: 1.5px solid #f48fb1; border-radius: 10px; margin-bottom: 15px; box-sizing: border-box; outline: none; font-size: 16px; text-align: center; }
+        .add-btn { background: #d81b60; color: white; border: none; width: 100%; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 16px; }
+        .add-btn:hover { background: #ad1457; transform: scale(1.02); }
+        ul { list-style: none; padding: 0; margin-top: 20px; text-align: right; }
+        li { background: #fdf2f7; margin-bottom: 8px; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; border-right: 4px solid #d81b60; font-size: 15px; }
+        .delete-btn { background: #ff5252; color: white; border: none; padding: 4px 8px; border-radius: 5px; cursor: pointer; font-size: 11px; }
+        .footer { margin-top: 20px; font-size: 12px; color: #ad1457; font-weight: bold; }
+    </style>
 </head>
 <body>
-    <div class="card">
-        <h1>🌸 ركن الأميرات المبدعات</h1>
-        <input type="text" id="nameInput" placeholder="اكتبي اسم المبدعة هنا...">
-        <button class="add-btn" onclick="addName()">إضافة للقائمة ✨</button>
-        <ul id="nameList"></ul>
-        <div class="footer">T-SAMAR MATH 💎 Math Comes to Life</div>
-    </div>
+    <div class="card">
+        <h1>🌸 ركن الأميرات - T-Samar</h1>
+        <input type="text" id="nameInput" placeholder="اكتبي اسم المبدعة هنا...">
+        <button class="add-btn" onclick="addName()">إضافة للقائمة ✨</button>
+        <ul id="nameList"></ul>
+        <div class="footer">T-SAMAR MATH 💎 Math Comes to Life</div>
+    </div>
 
-    <script>
-        function loadNames() {
-            const names = JSON.parse(localStorage.getItem('SamarGirlsData')) || [];
-            const list = document.getElementById('nameList');
-            list.innerHTML = '';
-            names.forEach((name, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="removeName(${index})">حذف</button>;
-                list.appendChild(li);
-            });
-        }
-        function addName() {
-            const input = document.getElementById('nameInput');
-            const name = input.value.trim();
-            if (name) {
-                const names = JSON.parse(localStorage.getItem('SamarGirlsData')) || [];
-                names.push(name);
-                localStorage.setItem('SamarGirlsData', JSON.stringify(names));
-                input.value = '';
-                loadNames();
-            }
-        }
-        function removeName(index) {
-            const names = JSON.parse(localStorage.getItem('SamarGirlsData')) || [];
-            names.splice(index, 1);
-            localStorage.setItem('SamarGirlsData', JSON.stringify(names));
-            loadNames();
-        }
-        window.onload = loadNames;
-    </script>
+    <script>
+        function loadNames() {
+            const names = JSON.parse(localStorage.getItem('Samar_Girls_DB')) || [];
+            const list = document.getElementById('nameList');
+            list.innerHTML = '';
+            names.forEach((name, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="removeName(${index})">حذف</button>;
+                list.appendChild(li);
+            });
+        }
+        function addName() {
+            const input = document.getElementById('nameInput');
+            const name = input.value.trim();
+            if (name) {
+                const names = JSON.parse(localStorage.getItem('Samar_Girls_DB')) || [];
+                names.push(name);
+                localStorage.setItem('Samar_Girls_DB', JSON.stringify(names));
+                input.value = '';
+                loadNames();
+            }
+        }
+        function removeName(index) {
+            const names = JSON.parse(localStorage.getItem('Samar_Girls_DB')) || [];
+            names.splice(index, 1);
+            localStorage.setItem('Samar_Girls_DB', JSON.stringify(names));
+            loadNames();
+        }
+        window.onload = loadNames;
+    </script>
 </body>
 </html>
