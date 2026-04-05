@@ -1,87 +1,83 @@
-<a href="https://www.instagram.com/t_samar_math" target="_blank" class="fab fa-instagram" title="Instagram"></a>
+<div class="footer">
+        <div class="social-grid">
+            <a href="https://www.youtube.com/@T_samar_math" target="_blank" class="fab fa-youtube"></a>
+            <a href="https://tiktok.com/@t_samora" target="_blank" class="fab fa-tiktok"></a>
+            <a href="https://www.instagram.com/t_samar_math?igsh=NDgzMWYzZ2pkNTg1" target="_blank" class="fab fa-instagram"></a>
         </div>
-        <p style="color:#d4af37; margin-top:20px; font-weight:bold;">T-SAMAR MATH © 2026</p>
+        <p style="color: var(--gold); font-weight: bold;">T-SAMAR MATH © 2026</p>
     </div>
 
     <script>
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        function playBeep(frequency) {
-            const osc = audioContext.createOscillator();
-            const gain = audioContext.createGain();
-            osc.connect(gain);
-            gain.connect(audioContext.destination);
-            osc.frequency.value = frequency;
-            gain.gain.value = 0.1;
-            osc.start();
-            gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.5);
-            osc.stop(audioContext.currentTime + 0.5);
+        // أصوات خفيفة جداً
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function beep(freq) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            osc.frequency.value = freq; gain.gain.value = 0.05;
+            osc.start(); osc.stop(audioCtx.currentTime + 0.1);
         }
 
-        // --- تعديل الحفظ يبدأ من هنا ---
-        let studentsData = JSON.parse(localStorage.getItem('TS_Boys_Storage')) || [];
-        const stageEmojis = ['⚡', '🔥', '🚀', '⭐', '🎖️', '💎'];
+        // السيارات المتدرجة (من العادية للسوبر)
+        const cars = ['🚗', '🚕', '🚙', '🏎️', '🚀', '⚡'];
+        const levels = ['مبتدئ', 'سائق محترف', 'سريع', 'نيترو', 'أسطورة السباق', 'برق بنزين'];
 
-        function addNewStudent() {
-            const name = document.getElementById('studentInput').value.trim();
-            if(name) {
-                studentsData.push({ id: Date.now(), name: name, stage: 0, lastUpdate: Date.now() });
-                document.getElementById('studentInput').value = "";
-                saveData();
-                playBeep(440);
-                refreshUI();
+        let racers = JSON.parse(localStorage.getItem('TS_Car_Race')) || [];
+
+        function addCar() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (name && racers.length < 30) {
+                racers.push({ id: Date.now(), name: name, level: 0 });
+                document.getElementById('nameInput').value = "";
+                beep(400);
+                saveAndRender();
+            } else if (racers.length >= 30) { alert('السباق مكتمل! (الحد الأقصى 30 بطل)'); }
+        }
+
+        function upgrade(id) {
+            let r = racers.find(x => x.id === id);
+            if (r && r.level < 5) {
+                r.level++;
+                beep(600 + (r.level * 50));
+                saveAndRender();
             }
         }
 
-        function upgradeStudent(id) {
-            let index = studentsData.findIndex(s => s.id === id);
-            if(studentsData[index].stage < 5) {
-                studentsData[index].stage++;
-                studentsData[index].lastUpdate = Date.now();
-                saveData();
-                playBeep(523 + (studentsData[index].stage * 100));
-                refreshUI();
-            }
+        function remove(id) {
+            racers = racers.filter(x => x.id !== id);
+            saveAndRender();
         }
 
-        // وظيفة حذف بطل معين
-        function deleteStudent(id) {
-            studentsData = studentsData.filter(s => s.id !== id);
-            saveData();
-            refreshUI();
+        function saveAndRender() {
+            localStorage.setItem('TS_Car_Race', JSON.stringify(racers));
+            render();
         }
 
-        // حفظ البيانات في ذاكرة المتصفح
-        function saveData() {
-            localStorage.setItem('TS_Boys_Storage', JSON.stringify(studentsData));
-        }
-
-        function refreshUI() {
-            studentsData.sort((a, b) => b.stage - a.stage || b.lastUpdate - a.lastUpdate);
-
-            const ticker = document.getElementById('leaderBoardText');
-            if(studentsData.length > 0 && studentsData[0].stage > 0) {
-                ticker.innerText = 👑 بطل الحصة الآن: ${studentsData[0].name} (مرحلة ${stageEmojis[studentsData[0].stage]}) مباااارك! 👑;
-            } else {
-                ticker.innerText = "بانتظار أول بطل لتصدر القائمة... 💎⚡🚀";
+        function render() {
+            // ترتيب حسب المستوى
+            racers.sort((a, b) => b.level - a.level);
+            
+            const ticker = document.getElementById('ticker');
+            if (racers.length > 0 && racers[0].level > 0) {
+                ticker.innerHTML = 👑 المتصدر الآن: <b>${racers[0].name}</b> وصل لمرحلة <b>${levels[racers[0].level]}</b> مبااااارك! 🏆🔥;
             }
 
-            const grid = document.getElementById('cardsGrid');
-            grid.innerHTML = "";
-            studentsData.forEach((student, index) => {
-                const isWinner = (index === 0 && student.stage > 0);
-                grid.innerHTML += 
-                    <div class="card ${isWinner ? 'top-winner' : ''}">
-                        <button class="del-btn" onclick="deleteStudent(${student.id})">×</button>
-                        <span class="emoji">${stageEmojis[student.stage]}</span>
-                        <span class="name">${student.name}</span>
-                        <button class="btn-up" onclick="upgradeStudent(${student.id})">تسجيل إنجاز ✨</button>
-                    </div>
-                ;
+            const track = document.getElementById('raceTrack');
+            track.innerHTML = "";
+            racers.forEach((r, i) => {
+                const isWinner = (i === 0 && r.level > 0);
+                track.innerHTML += 
+                    <div class="car-card ${isWinner ? 'winner' : ''}">
+                        <button class="del-btn" onclick="remove(${r.id})">×</button>
+                        <span class="pilot-name">${r.name}</span>
+                        <span class="car-visual">${cars[r.level]}</span>
+                        <div style="font-size:0.9rem; color:#888; margin-bottom:10px;">${levels[r.level]}</div>
+                        <button class="btn-gas" onclick="upgrade(${r.id})">دفع نيترو 💨</button>
+                    </div>;
             });
         }
 
-        // تشغيل العرض عند فتح الصفحة لأول مرة
-        window.onload = refreshUI;
+        window.onload = render;
     </script>
 </body>
 </html>
