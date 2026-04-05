@@ -1,86 +1,54 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Samar Math - الأميرات</title>
-    <style>
-        /* تصميم مس سمر الفخم الأصلي */
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #2d1346; color: white; text-align: center; margin: 0; padding: 20px; }
-        .container { max-width: 900px; margin: auto; }
-        .header { background: #ad1457; padding: 15px; border-radius: 50px; margin-bottom: 20px; border: 2px solid #ffd700; font-weight: bold; }
-        .input-box { background: #4a235a; padding: 20px; border-radius: 20px; border: 2px solid #ffd700; margin-bottom: 30px; }
-        input { padding: 12px; width: 60%; border-radius: 15px; border: none; font-size: 16px; text-align: center; }
-        .add-btn { padding: 12px 25px; background: #ffd700; color: #2d1346; border: none; border-radius: 15px; cursor: pointer; font-weight: bold; margin-right: 10px; }
-        
-        /* تصميم المربعات (الخلايا) زي صورك بالظبط */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 15px; padding: 10px; }
-        .card { background: rgba(255, 255, 255, 0.1); border: 2px solid #ffd700; border-radius: 15px; padding: 15px; position: relative; transition: 0.3s; }
-        .card:hover { transform: scale(1.05); background: rgba(255, 215, 0, 0.2); }
-        .icon { font-size: 30px; margin-bottom: 10px; }
-        .name { font-weight: bold; font-size: 18px; margin-bottom: 10px; display: block; }
-        .del-btn { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-    </style>
-</head>
-<body>
-
-<div class="container">
-    <div class="header">👑 T-SAMAR MATH - ملكة الحصة الآن: الأميرة المبدعة 👑</div>
-    
-    <div class="input-box">
-        <input type="text" id="nameInput" placeholder="اكتبي اسم الأميرة الجديدة...">
-        <button class="add-btn" onclick="addName()">إضافة أميرة ✨</button>
-    </div>
-
-    <div class="grid" id="grid">
-        <!-- الأسماء ستظهر هنا على شكل مربعات فخمة -->
-    </div>
-</div>
-
 <script>
-    // ميزة الحفظ اللي كانت ناقصاكي يا مس سمر
-    function loadNames() {
-        const saved = JSON.parse(localStorage.getItem('Samar_Final_Girls')) || [];
-        const grid = document.getElementById('grid');
-        grid.innerHTML = '';
-        saved.forEach((name, index) => {
-            const card = document.createElement('div');
-            card.className = 'card';
-            // تبديل الأيقونات بشكل عشوائي (وردة، قلب، نجمة) لشكل فخم
-            const icons = ['🌸', '💖', '✨', '👑'];
-            const randomIcon = icons[index % icons.length];
-            
-            card.innerHTML = 
-                <div class="icon">${randomIcon}</div>
-                <span class="name">${name}</span>
-                <button class="del-btn" onclick="deleteName(${index})">حذف</button>
-            ;
-            grid.appendChild(card);
-        });
-    }
+    // نظام الصوت الذكي
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound() {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.1);
+    }
 
-    function addName() {
-        const input = document.getElementById('nameInput');
-        const name = input.value.trim();
-        if (name) {
-            const saved = JSON.parse(localStorage.getItem('Samar_Final_Girls')) || [];
-            saved.push(name);
-            localStorage.setItem('Samar_Final_Girls', JSON.stringify(saved));
-            input.value = '';
-            loadNames();
-        }
-    }
+    // وظيفة العرض من الذاكرة
+    function loadNames() {
+        const saved = JSON.parse(localStorage.getItem('SamarRoyal_Final_V4')) || [];
+        const grid = document.getElementById('grid');
+        grid.innerHTML = '';
+        saved.forEach((name, index) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerHTML = <i class="fas fa-crown"></i><span class="name">${name}</span><button class="del-btn" onclick="deleteName(${index})">حذف</button>;
+            grid.appendChild(card);
+        });
+    }
 
-    function deleteName(index) {
-        const saved = JSON.parse(localStorage.getItem('Samar_Final_Girls')) || [];
-        saved.splice(index, 1);
-        localStorage.setItem('Samar_Final_Girls', JSON.stringify(saved));
-        loadNames();
-    }
+    // وظيفة الإضافة والحفظ
+    function addName() {
+        const input = document.getElementById('nameInput');
+        const name = input.value.trim();
+        if (name) {
+            playSound();
+            const saved = JSON.parse(localStorage.getItem('SamarRoyal_Final_V4')) || [];
+            saved.push(name);
+            localStorage.setItem('SamarRoyal_Final_V4', JSON.stringify(saved));
+            input.value = '';
+            loadNames();
+        }
+    }
 
-    // تشغيل الكود فوراً
-    window.onload = loadNames;
+    // وظيفة الحذف
+    function deleteName(index) {
+        const saved = JSON.parse(localStorage.getItem('SamarRoyal_Final_V4')) || [];
+        saved.splice(index, 1);
+        localStorage.setItem('SamarRoyal_Final_V4', JSON.stringify(saved));
+        loadNames();
+    }
+
+    window.onload = loadNames;
 </script>
-
 </body>
 </html>
