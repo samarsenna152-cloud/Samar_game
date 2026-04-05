@@ -3,65 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Samar Math - Boys Edition</title>
+    <title>T-Samar Math - Girls</title>
     <style>
-        /* الألوان المفضلة لمس سمر: Royal Blue & Gold */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #e3f2fd; color: #0d47a1; margin: 0; padding: 20px; }
-        .container { max-width: 500px; margin: auto; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 3px solid #90caf9; }
-        h1 { color: #01579b; font-size: 24px; margin-bottom: 20px; }
-        input { padding: 12px; width: 80%; border-radius: 10px; border: 2px solid #1e88e5; margin-bottom: 10px; font-size: 16px; outline: none; }
-        button.add-btn { padding: 12px 25px; background-color: #1565c0; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 85%; transition: 0.3s; }
-        button.add-btn:hover { background-color: #0d47a1; transform: scale(1.02); }
-        ul { list-style: none; padding: 0; margin-top: 20px; text-align: right; }
-        li { background: #e1f5fe; margin: 8px 0; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #90caf9; font-weight: 500; }
-        .delete-btn { background: #ff5252; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-        .footer { margin-top: 20px; font-size: 14px; color: #01579b; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fff0f5; color: #d81b60; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(216, 27, 96, 0.1); border: 2px solid #f8bbd0; width: 90%; max-width: 400px; text-align: center; }
+        h1 { color: #ad1457; font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #fce4ec; padding-bottom: 10px; }
+        input { width: 100%; padding: 12px; border: 2px solid #f48fb1; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; outline: none; font-size: 16px; }
+        button.add-btn { background: #d81b60; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.add-btn:hover { background: #ad1457; transform: translateY(-2px); }
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li { background: #fdf2f7; margin-bottom: 10px; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #d81b60; animation: fadeIn 0.5s ease; }
+        .delete-btn { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+        .footer { margin-top: 25px; font-size: 12px; color: #ad1457; font-weight: bold; opacity: 0.7; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>💎 عالم الأبطال - T-Samar</h1>
-        <input type="text" id="nameInput" placeholder="اكتبي اسم البطل المبدع...">
-        <button class="add-btn" onclick="addName()">إضافة البطل ⚡</button>
+    <div class="card">
+        <h1>🌸 ركن الأميرات المبدعات</h1>
+        <input type="text" id="nameInput" placeholder="اكتبي اسم المبدعة هنا...">
+        <button class="add-btn" onclick="addName()">إضافة للقائمة ✨</button>
         <ul id="nameList"></ul>
-        <div class="footer">Math Comes to Life | T-Samar 💎</div>
+        <div class="footer">T-SAMAR MATH 💎 Math Comes to Life</div>
     </div>
 
     <script>
-        // دالة تحميل الأسماء من الذاكرة الدائمة للجهاز
         function loadNames() {
-            const savedNames = JSON.parse(localStorage.getItem('T_Samar_Boys')) || [];
+            const names = JSON.parse(localStorage.getItem('SamarGirlsData')) || [];
             const list = document.getElementById('nameList');
             list.innerHTML = '';
-            savedNames.forEach((name, index) => {
+            names.forEach((name, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="deleteName(${index})">حذف</button>;
+                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="removeName(${index})">حذف</button>;
                 list.appendChild(li);
             });
         }
-
-        // دالة إضافة الاسم وحفظه في الذاكرة
         function addName() {
             const input = document.getElementById('nameInput');
             const name = input.value.trim();
             if (name) {
-                const savedNames = JSON.parse(localStorage.getItem('T_Samar_Boys')) || [];
-                savedNames.push(name);
-                localStorage.setItem('T_Samar_Boys', JSON.stringify(savedNames));
+                const names = JSON.parse(localStorage.getItem('SamarGirlsData')) || [];
+                names.push(name);
+                localStorage.setItem('SamarGirlsData', JSON.stringify(names));
                 input.value = '';
                 loadNames();
             }
         }
-
-        // دالة حذف الاسم وتحديث الذاكرة
-        function deleteName(index) {
-            const savedNames = JSON.parse(localStorage.getItem('T_Samar_Boys')) || [];
-            savedNames.splice(index, 1);
-            localStorage.setItem('T_Samar_Boys', JSON.stringify(savedNames));
+        function removeName(index) {
+            const names = JSON.parse(localStorage.getItem('SamarGirlsData')) || [];
+            names.splice(index, 1);
+            localStorage.setItem('SamarGirlsData', JSON.stringify(names));
             loadNames();
         }
-
-        // تنفيذ التحميل بمجرد فتح الصفحة
         window.onload = loadNames;
     </script>
 </body>
