@@ -3,64 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Samar Math - Girls Edition</title>
+    <title>T-Samar Math - Boys</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; background-color: #fff0f5; color: #d81b60; margin: 0; padding: 20px; }
-        .container { max-width: 500px; margin: auto; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 3px solid #f8bbd0; }
-        h1 { color: #ad1457; font-size: 24px; margin-bottom: 20px; }
-        input { padding: 12px; width: 80%; border-radius: 10px; border: 2px solid #f06292; margin-bottom: 10px; font-size: 16px; outline: none; }
-        button.add-btn { padding: 12px 25px; background-color: #d81b60; color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 85%; transition: 0.3s; }
-        button.add-btn:hover { background-color: #ad1457; transform: scale(1.02); }
-        ul { list-style: none; padding: 0; margin-top: 20px; text-align: right; }
-        li { background: #fce4ec; margin: 8px 0; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid #f8bbd0; font-weight: 500; }
-        .delete-btn { background: #ff5252; color: white; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }
-        .footer { margin-top: 20px; font-size: 14px; color: #880e4f; font-weight: bold; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e3f2fd; color: #0d47a1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
+        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(13, 71, 161, 0.1); border: 2px solid #90caf9; width: 90%; max-width: 400px; text-align: center; }
+        h1 { color: #01579b; font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #e1f5fe; padding-bottom: 10px; }
+        input { width: 100%; padding: 12px; border: 2px solid #64b5f6; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; outline: none; font-size: 16px; }
+        button.add-btn { background: #1565c0; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.add-btn:hover { background: #0d47a1; transform: translateY(-2px); }
+        ul { list-style: none; padding: 0; margin-top: 20px; }
+        li { background: #f1f8ff; margin-bottom: 10px; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #1565c0; animation: fadeIn 0.5s ease; }
+        .delete-btn { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
+        .footer { margin-top: 25px; font-size: 12px; color: #01579b; font-weight: bold; opacity: 0.7; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🌸 عالم الأميرات - T-Samar</h1>
-        <input type="text" id="nameInput" placeholder="اكتبي اسم الطالبة المبدعة...">
-        <button class="add-btn" onclick="addName()">إضافة الطالبة ✨</button>
+    <div class="card">
+        <h1>💎 ركن الأبطال المبدعين</h1>
+        <input type="text" id="nameInput" placeholder="اكتبي اسم البطل هنا...">
+        <button class="add-btn" onclick="addName()">إضافة للقائمة ⚡</button>
         <ul id="nameList"></ul>
-        <div class="footer">Math Comes to Life | T-Samar 💎</div>
+        <div class="footer">T-SAMAR MATH 💎 Math Comes to Life</div>
     </div>
 
     <script>
-        // وظيفة تحميل الأسماء من ذاكرة المتصفح الدائمة (LocalStorage)
         function loadNames() {
-            const savedNames = JSON.parse(localStorage.getItem('T_Samar_Girls')) || [];
+            const names = JSON.parse(localStorage.getItem('SamarBoysData')) || [];
             const list = document.getElementById('nameList');
             list.innerHTML = '';
-            savedNames.forEach((name, index) => {
+            names.forEach((name, index) => {
                 const li = document.createElement('li');
-                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="deleteName(${index})">حذف</button>;
+                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="removeName(${index})">حذف</button>;
                 list.appendChild(li);
             });
         }
-
-        // وظيفة إضافة اسم وحفظه للأبد في الجهاز
         function addName() {
             const input = document.getElementById('nameInput');
             const name = input.value.trim();
             if (name) {
-                const savedNames = JSON.parse(localStorage.getItem('T_Samar_Girls')) || [];
-                savedNames.push(name);
-                localStorage.setItem('T_Samar_Girls', JSON.stringify(savedNames));
+                const names = JSON.parse(localStorage.getItem('SamarBoysData')) || [];
+                names.push(name);
+                localStorage.setItem('SamarBoysData', JSON.stringify(names));
                 input.value = '';
                 loadNames();
             }
         }
-
-        // وظيفة حذف اسم من القائمة والذاكرة
-        function deleteName(index) {
-            const savedNames = JSON.parse(localStorage.getItem('T_Samar_Girls')) || [];
-            savedNames.splice(index, 1);
-            localStorage.setItem('T_Samar_Girls', JSON.stringify(savedNames));
+        function removeName(index) {
+            const names = JSON.parse(localStorage.getItem('SamarBoysData')) || [];
+            names.splice(index, 1);
+            localStorage.setItem('SamarBoysData', JSON.stringify(names));
             loadNames();
         }
-
-        // تشغيل التحميل بمجرد فتح الصفحة
         window.onload = loadNames;
     </script>
 </body>
