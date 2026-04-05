@@ -1,61 +1,87 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>T-Samar Math - Boys</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #e3f2fd; color: #0d47a1; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(13, 71, 161, 0.1); border: 2px solid #90caf9; width: 90%; max-width: 400px; text-align: center; }
-        h1 { color: #01579b; font-size: 22px; margin-bottom: 20px; border-bottom: 2px solid #e1f5fe; padding-bottom: 10px; }
-        input { width: 100%; padding: 12px; border: 2px solid #64b5f6; border-radius: 12px; margin-bottom: 15px; box-sizing: border-box; outline: none; font-size: 16px; }
-        button.add-btn { background: #1565c0; color: white; border: none; width: 100%; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button.add-btn:hover { background: #0d47a1; transform: translateY(-2px); }
-        ul { list-style: none; padding: 0; margin-top: 20px; }
-        li { background: #f1f8ff; margin-bottom: 10px; padding: 12px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-right: 5px solid #1565c0; animation: fadeIn 0.5s ease; }
-        .delete-btn { background: #ff5252; color: white; border: none; padding: 5px 10px; border-radius: 8px; cursor: pointer; font-size: 12px; }
-        .footer { margin-top: 25px; font-size: 12px; color: #01579b; font-weight: bold; opacity: 0.7; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-    </style>
-</head>
-<body>
-    <div class="card">
-        <h1>💎 ركن الأبطال المبدعين</h1>
-        <input type="text" id="nameInput" placeholder="اكتبي اسم البطل هنا...">
-        <button class="add-btn" onclick="addName()">إضافة للقائمة ⚡</button>
-        <ul id="nameList"></ul>
-        <div class="footer">T-SAMAR MATH 💎 Math Comes to Life</div>
+<a href="https://www.instagram.com/t_samar_math" target="_blank" class="fab fa-instagram" title="Instagram"></a>
+        </div>
+        <p style="color:#d4af37; margin-top:20px; font-weight:bold;">T-SAMAR MATH © 2026</p>
     </div>
 
     <script>
-        function loadNames() {
-            const names = JSON.parse(localStorage.getItem('SamarBoysData')) || [];
-            const list = document.getElementById('nameList');
-            list.innerHTML = '';
-            names.forEach((name, index) => {
-                const li = document.createElement('li');
-                li.innerHTML = <span>${name}</span> <button class="delete-btn" onclick="removeName(${index})">حذف</button>;
-                list.appendChild(li);
-            });
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        function playBeep(frequency) {
+            const osc = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+            osc.connect(gain);
+            gain.connect(audioContext.destination);
+            osc.frequency.value = frequency;
+            gain.gain.value = 0.1;
+            osc.start();
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioContext.currentTime + 0.5);
+            osc.stop(audioContext.currentTime + 0.5);
         }
-        function addName() {
-            const input = document.getElementById('nameInput');
-            const name = input.value.trim();
-            if (name) {
-                const names = JSON.parse(localStorage.getItem('SamarBoysData')) || [];
-                names.push(name);
-                localStorage.setItem('SamarBoysData', JSON.stringify(names));
-                input.value = '';
-                loadNames();
+
+        // --- تعديل الحفظ يبدأ من هنا ---
+        let studentsData = JSON.parse(localStorage.getItem('TS_Boys_Storage')) || [];
+        const stageEmojis = ['⚡', '🔥', '🚀', '⭐', '🎖️', '💎'];
+
+        function addNewStudent() {
+            const name = document.getElementById('studentInput').value.trim();
+            if(name) {
+                studentsData.push({ id: Date.now(), name: name, stage: 0, lastUpdate: Date.now() });
+                document.getElementById('studentInput').value = "";
+                saveData();
+                playBeep(440);
+                refreshUI();
             }
         }
-        function removeName(index) {
-            const names = JSON.parse(localStorage.getItem('SamarBoysData')) || [];
-            names.splice(index, 1);
-            localStorage.setItem('SamarBoysData', JSON.stringify(names));
-            loadNames();
+
+        function upgradeStudent(id) {
+            let index = studentsData.findIndex(s => s.id === id);
+            if(studentsData[index].stage < 5) {
+                studentsData[index].stage++;
+                studentsData[index].lastUpdate = Date.now();
+                saveData();
+                playBeep(523 + (studentsData[index].stage * 100));
+                refreshUI();
+            }
         }
-        window.onload = loadNames;
+
+        // وظيفة حذف بطل معين
+        function deleteStudent(id) {
+            studentsData = studentsData.filter(s => s.id !== id);
+            saveData();
+            refreshUI();
+        }
+
+        // حفظ البيانات في ذاكرة المتصفح
+        function saveData() {
+            localStorage.setItem('TS_Boys_Storage', JSON.stringify(studentsData));
+        }
+
+        function refreshUI() {
+            studentsData.sort((a, b) => b.stage - a.stage || b.lastUpdate - a.lastUpdate);
+
+            const ticker = document.getElementById('leaderBoardText');
+            if(studentsData.length > 0 && studentsData[0].stage > 0) {
+                ticker.innerText = 👑 بطل الحصة الآن: ${studentsData[0].name} (مرحلة ${stageEmojis[studentsData[0].stage]}) مباااارك! 👑;
+            } else {
+                ticker.innerText = "بانتظار أول بطل لتصدر القائمة... 💎⚡🚀";
+            }
+
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = "";
+            studentsData.forEach((student, index) => {
+                const isWinner = (index === 0 && student.stage > 0);
+                grid.innerHTML += 
+                    <div class="card ${isWinner ? 'top-winner' : ''}">
+                        <button class="del-btn" onclick="deleteStudent(${student.id})">×</button>
+                        <span class="emoji">${stageEmojis[student.stage]}</span>
+                        <span class="name">${student.name}</span>
+                        <button class="btn-up" onclick="upgradeStudent(${student.id})">تسجيل إنجاز ✨</button>
+                    </div>
+                ;
+            });
+        }
+
+        // تشغيل العرض عند فتح الصفحة لأول مرة
+        window.onload = refreshUI;
     </script>
 </body>
 </html>
